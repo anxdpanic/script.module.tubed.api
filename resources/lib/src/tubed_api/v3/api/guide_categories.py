@@ -8,7 +8,12 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-ACCESS_TOKEN = ''
-API_KEY = ''
+from ..query import V3Query
+from ..query import query
 
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'v3']
+
+# deprecated
+# https://developers.google.com/youtube/v3/docs/guideCategories/list
+@query
+def get(parameters=None):
+    return V3Query('get', 'guideCategories', parameters=parameters)
