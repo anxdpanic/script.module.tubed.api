@@ -13,4 +13,5 @@ API_KEY = ''
 CLIENT_ID = ''
 CLIENT_SECRET = ''
 
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET', 'oauth', 'v3', 'utils']
+__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET',
+           'oauth', 'resolver', 'v3', 'utils']
