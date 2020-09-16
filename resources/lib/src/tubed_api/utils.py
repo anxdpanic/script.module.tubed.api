@@ -8,9 +8,8 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-ACCESS_TOKEN = ''
-API_KEY = ''
-CLIENT_ID = ''
-CLIENT_SECRET = ''
+from collections import namedtuple
 
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET', 'oauth', 'v3', 'utils']
+
+def object_hook(data):
+    return namedtuple('_', data.keys(), rename=True)(*data.values())

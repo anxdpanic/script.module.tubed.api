@@ -8,9 +8,4 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-ACCESS_TOKEN = ''
-API_KEY = ''
-CLIENT_ID = ''
-CLIENT_SECRET = ''
-
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET', 'oauth', 'v3', 'utils']
+__all__ = ['client']

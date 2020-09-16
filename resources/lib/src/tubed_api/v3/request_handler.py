@@ -9,14 +9,11 @@
 """
 
 import json
-from collections import namedtuple
 
 from requests import Session
 from requests.adapters import HTTPAdapter
 
-
-def _object_hook(data):
-    return namedtuple('_', data.keys(), rename=True)(*data.values())
+from ..utils import object_hook
 
 
 def _status_response(response):
@@ -32,7 +29,7 @@ def _status_response(response):
             "code": response.status_code
         }
 
-    return json.loads(json.dumps(payload), object_hook=_object_hook)
+    return json.loads(json.dumps(payload), object_hook=object_hook)
 
 
 def v3_request(method, url, parameters, data, headers):
@@ -48,6 +45,6 @@ def v3_request(method, url, parameters, data, headers):
     response.encoding = 'utf-8'
 
     try:
-        return response.json(object_hook=_object_hook)
+        return response.json(object_hook=object_hook)
     except ValueError:
         return _status_response(response)
