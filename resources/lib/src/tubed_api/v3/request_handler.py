@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+"""
+    Copyright (C) 2020 Tubed API (script.module.tubed.api)
+
+    This file is part of script.module.tubed.api
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+    See LICENSES/GPL-2.0-or-later.txt for more information.
+"""
+
+import json
+from collections import namedtuple
+
+from requests import Session
+from requests.adapters import HTTPAdapter
+
+
+def _object_hook(data):
+    return namedtuple('_', data.keys(), rename=True)(*data.values())
+
+
+def _status_response(response):
+    if 200 <= response.status_code < 300:
+        payload = {
+            "success": True,
+            "code": response.status_code
+        }
+
+    else:
+        payload = {
+            "success": False,
+            "code": response.status_code
+        }
+
+    return json.loads(json.dumps(payload), object_hook=_object_hook)
+
+
+def v3_request(method, url, parameters, data, headers):
+    adapter = HTTPAdapter(max_retries=3)
+    session = Session()
+
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+
+    response = getattr(session, method)(url, params=parameters, data=data,
+                                        headers=headers, timeout=(2, 60))
+
+    response.encoding = 'utf-8'
+
+    try:
+        return response.json(object_hook=_object_hook)
+    except ValueError:
+        return _status_response(response)
