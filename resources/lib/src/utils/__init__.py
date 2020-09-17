@@ -8,6 +8,4 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-from resources.lib.src import service  # pylint: disable=import-error
-
-service.invoke()
+__all__ = ['json', 'time']
