@@ -8,8 +8,8 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-from datetime import datetime
 import time
+from datetime import datetime
 
 now = datetime.now
 

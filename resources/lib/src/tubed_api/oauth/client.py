@@ -13,9 +13,9 @@ import time
 
 import requests
 
+from ...utils.json import object_hook
 from .. import CLIENT_ID
 from .. import CLIENT_SECRET
-from ...utils.json import object_hook
 
 
 class Client:

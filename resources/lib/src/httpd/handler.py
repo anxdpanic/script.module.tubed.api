@@ -10,12 +10,10 @@
 
 import os
 import re
-
-import requests
-
 from http.server import BaseHTTPRequestHandler
 from ipaddress import ip_address
 
+import requests
 import xbmc  # pylint: disable=import-error
 import xbmcgui  # pylint: disable=import-error
 
