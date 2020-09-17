@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+"""
+    Copyright (C) 2020 Tubed API (script.module.tubed.api)
+
+    This file is part of script.module.tubed.api
+
+    SPDX-License-Identifier: GPL-2.0-or-later
+    See LICENSES/GPL-2.0-or-later.txt for more information.
+"""
+
+from datetime import datetime
+import time
+
+now = datetime.now
+
+
+def strptime(timestamp, timestamp_format):
+    import _strptime  # pylint: disable=import-outside-toplevel
+    try:
+        time.strptime('01 01 2012', '%d %m %Y')
+    finally:
+        return time.strptime(timestamp, timestamp_format)  # pylint: disable=lost-exception
+
+
+def timestamp_diff(timestamp):
+    try:
+        then = datetime(*(strptime(timestamp, '%Y-%m-%d %H:%M:%S.%f')[0:6]))
+    except ValueError:
+        then = datetime(*(strptime(timestamp, '%Y-%m-%d %H:%M:%S')[0:6]))
+
+    delta = now() - then
+
+    total_seconds = 0
+    if delta:
+        total_seconds = ((delta.seconds + delta.days * 24 * 3600) * 10 ** 6) // (10 ** 6)
+
+    return total_seconds

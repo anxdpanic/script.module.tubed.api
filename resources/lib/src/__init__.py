@@ -8,4 +8,4 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-__all__ = ['httpd', 'tubed_api', 'service']
+__all__ = ['httpd', 'tubed_api', 'utils', 'service']

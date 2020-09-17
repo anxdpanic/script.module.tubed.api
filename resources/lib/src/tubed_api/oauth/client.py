@@ -15,7 +15,7 @@ import requests
 
 from .. import CLIENT_ID
 from .. import CLIENT_SECRET
-from ..utils import object_hook
+from ...utils.json import object_hook
 
 
 class Client:
