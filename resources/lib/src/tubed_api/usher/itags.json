@@ -1106,5 +1106,55 @@
             "bitrate": 160,
             "encoding": "opus"
         }
+    },
+    "9997": {
+        "container": "mpd",
+        "sort": [
+            -1,
+            0
+        ],
+        "title": "DASH Audio",
+        "dash/audio": true,
+        "audio": {
+            "bitrate": 0,
+            "encoding": ""
+        }
+    },
+    "9998": {
+        "container": "mpd",
+        "Live": true,
+        "sort": [
+            1080,
+            1
+        ],
+        "title": "Live DASH",
+        "dash/audio": true,
+        "dash/video": true,
+        "audio": {
+            "bitrate": 0,
+            "encoding": ""
+        },
+        "video": {
+            "height": 0,
+            "encoding": ""
+        }
+    },
+    "9999": {
+        "container": "mpd",
+        "sort": [
+            1080,
+            1
+        ],
+        "title": "DASH",
+        "dash/audio": true,
+        "dash/video": true,
+        "audio": {
+            "bitrate": 0,
+            "encoding": ""
+        },
+        "video": {
+            "height": 0,
+            "encoding": ""
+        }
     }
 }
