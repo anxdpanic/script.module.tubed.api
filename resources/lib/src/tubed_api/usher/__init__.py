@@ -8,10 +8,4 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-ACCESS_TOKEN = ''
-API_KEY = ''
-CLIENT_ID = ''
-CLIENT_SECRET = ''
-
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET',
-           'oauth', 'usher', 'v3']
+__all__ = ['cipher', 'mpeg_dash', 'resolver', 'video_info']
