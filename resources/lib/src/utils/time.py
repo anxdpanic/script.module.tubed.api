@@ -30,8 +30,4 @@ def timestamp_diff(timestamp):
 
     delta = now() - then
 
-    total_seconds = 0
-    if delta:
-        total_seconds = ((delta.seconds + delta.days * 24 * 3600) * 10 ** 6) // (10 ** 6)
-
-    return total_seconds
+    return delta.total_seconds()
