@@ -8,4 +8,8 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-__all__ = ['cipher', 'mpeg_dash', 'resolver', 'subtitles', 'video_info']
+
+class Subtitles:
+
+    def __init__(self):
+        pass
