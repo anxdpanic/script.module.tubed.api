@@ -15,6 +15,8 @@ from urllib.parse import unquote
 
 import xbmcvfs  # pylint: disable=import-error
 
+from .quality import Quality
+
 
 class ManifestGenerator:
     path = xbmcvfs.translatePath('special://temp/script.module.tubed.api/')
@@ -91,7 +93,7 @@ class ManifestGenerator:
 
         self.discarded = discarded
 
-    def _filter_qualities(self, stream_data, container, sorted_qualities, fps_limit):  # pylint: disable=too-many-branches
+    def _filter_qualities(self, stream_data, container, quality_object):  # pylint: disable=too-many-branches
         data = deepcopy(stream_data)
 
         if container == 'mp4':
@@ -103,7 +105,7 @@ class ManifestGenerator:
         else:
             return data
 
-        if fps_limit and mime_type in stream_data:
+        if quality_object.limit_30fps and mime_type in stream_data:
             # if 30 fps limit enabled, discard streams that are greater than 30fps
             if any(itag for itag in data[mime_type].keys() if data[mime_type][itag]['fps'] <= 30):
                 for itag in data[mime_type].keys():
@@ -122,7 +124,7 @@ class ManifestGenerator:
         itag_matches = []
         itag_match = None
 
-        for quality in sorted_qualities:
+        for quality in quality_object.qualities:
             # find all streams with matching height
             if any(itag for itag in list(data[mime_type].keys())
                    if int(data[mime_type][itag].get('height', 0)) == quality):
@@ -133,17 +135,17 @@ class ManifestGenerator:
 
         if not itag_matches:
             # find best match for quality if there were no exact height candidates
-            for index, quality in enumerate(sorted_qualities):
-                if index == len(sorted_qualities) - 1:
+            for index, quality in enumerate(quality_object.qualities):
+                if index == len(quality_object.qualities) - 1:
                     continue
 
                 if any(itag for itag in data[mime_type].keys()
                        if (quality > int(data[mime_type][itag].get('height', 0)) >=
-                           sorted_qualities[index + 1])):
+                           quality_object.qualities[index + 1])):
                     i_match = next(itag for itag in data[mime_type].keys()
                                    if ((int(data[mime_type][itag].get('height', 0)) < quality) and
                                        (int(data[mime_type][itag].get('height', 0)) >=
-                                        sorted_qualities[index + 1])))
+                                        quality_object.qualities[index + 1])))
                     itag_matches.append(i_match)
                     break
 
@@ -312,17 +314,12 @@ class ManifestGenerator:
             }
         }
 
-    def generate(self, video_id, formats, duration, quality_data):  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+    def generate(self, video_id, formats, duration, quality_object=None):  # pylint: disable=too-many-branches,too-many-statements
         if not self._make_dirs():
             return None
 
-        mpd_quality = quality_data.get('mpd_quality')
-
-        av1 = quality_data.get('av1')
-        hdr = quality_data.get('hdr')
-
-        limit_30fps = quality_data.get('limit_30fps')
-        limit_qualities = quality_data.get('video_qualities')
+        if not quality_object:
+            quality_object = Quality('mp4')
 
         has_video_stream = False
 
@@ -345,21 +342,18 @@ class ManifestGenerator:
             supported_mime_types.append('video/webm')
 
         if ('video/webm' in supported_mime_types and
-                ((isinstance(mpd_quality, str) and mpd_quality == 'webm') or
-                 (isinstance(mpd_quality, int) and mpd_quality > 1080) or
-                 hdr)):
+                ((isinstance(quality_object.quality, str) and quality_object.quality == 'webm') or
+                 (isinstance(quality_object.quality, int) and quality_object.quality > 1080) or
+                 quality_object.hdr)):
             default_mime_type = 'webm'
 
-        apply_filters = isinstance(mpd_quality, int) and isinstance(limit_qualities, list)
-
         if 'video/webm' in supported_mime_types:
-            filtered = self._filter_hdr(data['video/webm'], hdr=hdr)
+            filtered = self._filter_hdr(data['video/webm'], hdr=quality_object.hdr)
             if filtered:
                 data['video/webm'] = filtered
 
-        if apply_filters:
-            data = self._filter_qualities(data, default_mime_type,
-                                          limit_qualities, limit_30fps)
+        if isinstance(quality_object.quality, int) and isinstance(quality_object.qualities, list):
+            data = self._filter_qualities(data, default_mime_type, quality_object)
 
         mpd_list = ['<?xml version="1.0" encoding="UTF-8"?>\n'
                     '<MPD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
@@ -431,11 +425,12 @@ class ManifestGenerator:
                     else:
                         video_codec = data[mime][itag]['codec']
 
-                        if video_codec.lower() == 'vp9.2' and not hdr:
+                        if video_codec.lower() == 'vp9.2' and not quality_object.hdr:
                             self.discard_video(mime, itag, data[mime][itag], 'hdr not selected')
                             continue
 
-                        if video_codec.lower().startswith(('av01', 'av1')) and not av1:
+                        if (video_codec.lower().startswith(('av01', 'av1')) and
+                                not quality_object.av1):
                             self.discard_video(mime, itag, data[mime][itag], 'av1 not selected')
                             continue
 

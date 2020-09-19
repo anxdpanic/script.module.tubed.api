@@ -24,6 +24,7 @@ import xbmcvfs  # pylint: disable=import-error
 from .. import ACCESS_TOKEN
 from .cipher import Cipher
 from .mpeg_dash import ManifestGenerator
+from .quality import Quality
 from .subtitles import Subtitles
 
 
@@ -351,7 +352,7 @@ class VideoInfo:
 
         return ''
 
-    def _get_video_info(self, video_id):  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+    def get_video(self, video_id, quality=None):  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
         headers = self.headers
         if self._access_token:
             headers['Authorization'] = 'Bearer %s' % self._access_token
@@ -511,11 +512,14 @@ class VideoInfo:
 
         generated_manifest = False
         if not license_data.get('url') and not is_live:
+            if not quality:
+                quality = Quality('mp4')
+
             mpd_url, stream_info = ManifestGenerator(self.itags, cipher).generate(
                 video_id,
                 adaptive_formats,
                 video_details.get('lengthSeconds', '0'),
-                {}
+                quality
             )
             generated_manifest = True
 
