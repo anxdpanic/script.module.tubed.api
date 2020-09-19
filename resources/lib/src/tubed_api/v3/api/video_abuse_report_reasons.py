@@ -8,6 +8,11 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-from resources.lib.src import service  # pylint: disable=import-error
+from ..query import V3Query
+from ..query import query
 
-service.invoke()
+
+# https://developers.google.com/youtube/v3/docs/videoAbuseReportReasons/list
+@query
+def get(parameters=None):
+    return V3Query('get', 'videoAbuseReportReasons', parameters=parameters)

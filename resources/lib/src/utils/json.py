@@ -8,4 +8,8 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-__all__ = ['httpd', 'tubed_api', 'utils', 'service']
+from collections import namedtuple
+
+
+def object_hook(data):
+    return namedtuple('_', data.keys(), rename=True)(*data.values())

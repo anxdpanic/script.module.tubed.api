@@ -8,4 +8,11 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-__all__ = ['httpd', 'tubed_api', 'utils', 'service']
+from ..query import V3Query
+from ..query import query
+
+
+# https://developers.google.com/youtube/v3/docs/search/list
+@query
+def get(parameters=None):
+    return V3Query('get', 'search', parameters=parameters)

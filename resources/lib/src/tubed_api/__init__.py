@@ -4,6 +4,14 @@
 
     This file is part of script.module.tubed.api
 
-    SPDX-License-Identifier: GPL-2.0-or-later
-    See LICENSES/GPL-2.0-or-later.txt for more information.
+    SPDX-License-Identifier: GPL-2.0-only
+    See LICENSES/GPL-2.0-only.txt for more information.
 """
+
+ACCESS_TOKEN = ''
+API_KEY = ''
+CLIENT_ID = ''
+CLIENT_SECRET = ''
+
+__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET',
+           'oauth', 'usher', 'v3']
