@@ -8,4 +8,4 @@
     See LICENSES/GPL-2.0-or-later.txt for more information.
 """
 
-__all__ = ['cipher', 'mpeg_dash', 'resolver', 'subtitles', 'video_info']
+__all__ = ['cipher', 'mpeg_dash', 'quality', 'resolver', 'subtitles', 'video_info']
