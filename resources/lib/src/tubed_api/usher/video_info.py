@@ -511,10 +511,11 @@ class VideoInfo:
 
         generated_manifest = False
         if not license_data.get('url') and not is_live:
-            mpd_url, stream_info = ManifestGenerator(cipher).generate(
+            mpd_url, stream_info = ManifestGenerator(self.itags, cipher).generate(
                 video_id,
                 adaptive_formats,
-                video_details.get('lengthSeconds', '0')
+                video_details.get('lengthSeconds', '0'),
+                {}
             )
             generated_manifest = True
 
