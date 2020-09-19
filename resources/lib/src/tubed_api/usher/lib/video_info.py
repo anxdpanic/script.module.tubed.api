@@ -21,7 +21,7 @@ from urllib.parse import quote
 import requests
 import xbmcvfs  # pylint: disable=import-error
 
-from .. import ACCESS_TOKEN
+from ... import ACCESS_TOKEN
 from .cipher import Cipher
 from .mpeg_dash import ManifestGenerator
 from .quality import Quality

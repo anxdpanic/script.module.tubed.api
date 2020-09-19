@@ -10,9 +10,9 @@
 
 import json
 
-from .quality import Quality
-from .video_info import VideoInfo
 from ...utils.json import object_hook
+from .lib.quality import Quality
+from .lib.video_info import VideoInfo
 
 
 def resolve(video_id, quality=None, language='en-US', region='US'):
