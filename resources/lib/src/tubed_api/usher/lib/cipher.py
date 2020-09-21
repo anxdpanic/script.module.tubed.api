@@ -15,6 +15,8 @@ import re
 
 import requests
 
+from ...exceptions import CipherUnknownMethod
+
 
 class Cipher:
     def __init__(self, url):
@@ -299,7 +301,8 @@ class Engine:
             if method:
                 _signature = method(*params)
             else:
-                raise Exception("Signature deciphering encountered an unknown method '%s'" % func)
+                raise CipherUnknownMethod('Signature deciphering encountered '
+                                          'an unknown method %s' % func)
 
         return _signature
 
