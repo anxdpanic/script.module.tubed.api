@@ -22,6 +22,9 @@ import requests
 import xbmcvfs  # pylint: disable=import-error
 
 from ... import ACCESS_TOKEN
+from ...exceptions import CipherFailedDecipher
+from ...exceptions import CipherNotFound
+from ...exceptions import ContentRestricted
 from .cipher import Cipher
 from .mpeg_dash import ManifestGenerator
 from .quality import Quality
@@ -333,7 +336,7 @@ class VideoInfo:
             return url
 
         if not cipher:
-            raise Exception('Cipher not found')
+            raise CipherNotFound('Cipher not found')
 
         signature_param = 'signature'
         match = re.search('/sp/(?P<signature_param>[^/]+)', url)
@@ -454,7 +457,7 @@ class VideoInfo:
 
         status = self.playability(playability_status)
         if not status['playable']:
-            raise Exception(status['reason'])
+            raise ContentRestricted(status['reason'])
 
         metadata['subtitles'] = Subtitles(video_id, captions).retrieve()
 
@@ -526,7 +529,7 @@ class VideoInfo:
         if not generated_manifest and mpd_url:
             mpd_url = self._decipher_signature(cipher, mpd_url)
             if not mpd_url:
-                raise Exception('Failed to decipher signature')
+                raise CipherFailedDecipher('Failed to decipher signature')
 
         video_stream = {
             'url': mpd_url,

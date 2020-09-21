@@ -12,6 +12,7 @@ from copy import deepcopy
 
 from .. import ACCESS_TOKEN
 from .. import API_KEY
+from ..exceptions import ResourceUnavailable
 from .request_handler import v3_request
 
 
@@ -63,7 +64,7 @@ class Query:
         try:
             return func(self.method, self.url, self.parameters, self.data, self.headers)
         except Exception as error:
-            raise Exception(str(self)).with_traceback(error.__traceback__)
+            raise ResourceUnavailable(str(self)).with_traceback(error.__traceback__)
 
 
 class V3Query(Query):
