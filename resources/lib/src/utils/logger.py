@@ -17,7 +17,7 @@ except ImportError:
 
 
 class Log:
-    def __init__(self, name='logger.tubed', package='', module='', filename=''):
+    def __init__(self, name='logger.tubed.api', package='', module='', filename=''):
         """
         A simple logger for logging to the Kodi log, Console or a separate Log file
         :param name: Name of the logger
