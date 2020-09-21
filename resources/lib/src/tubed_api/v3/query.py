@@ -64,7 +64,11 @@ class Query:
         try:
             return func(self.method, self.url, self.parameters, self.data, self.headers)
         except Exception as error:
-            raise ResourceUnavailable(str(self)).with_traceback(error.__traceback__)
+            raise ResourceUnavailable({
+                'error': 'resource_unavailable',
+                'error_description': str(self),
+                'code': '500'
+            }).with_traceback(error.__traceback__)
 
 
 class V3Query(Query):
