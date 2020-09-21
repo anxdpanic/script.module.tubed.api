@@ -14,8 +14,6 @@ import time
 import requests
 
 from ...utils.json import object_hook
-from .. import CLIENT_ID
-from .. import CLIENT_SECRET
 from ..exceptions import OAuthInvalidGrant
 from ..exceptions import OAuthRequestFailed
 
@@ -29,9 +27,9 @@ class Client:
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 
-    def __init__(self):
-        self.client_id = CLIENT_ID
-        self.client_secret = CLIENT_SECRET
+    def __init__(self, client_id, client_secret):
+        self.client_id = client_id
+        self.client_secret = client_secret
 
     def request_codes(self):
         data = {
