@@ -301,8 +301,12 @@ class Engine:
             if method:
                 _signature = method(*params)
             else:
-                raise CipherUnknownMethod('Signature deciphering encountered '
-                                          'an unknown method %s' % func)
+                raise CipherUnknownMethod({
+                    'error': 'cipher_unknown_method',
+                    'error_description': 'Signature deciphering encountered '
+                                         'an unknown method %s' % func,
+                    'code': '500'
+                })
 
         return _signature
 

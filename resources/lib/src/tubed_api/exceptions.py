@@ -10,16 +10,35 @@
 
 
 class TubedAPIException(Exception):
-    _message = ''
+    _data = {
+        'error': 'exception',
+        'error_description': 'Unknown exception occurred',
+        'code': '500'
+    }
 
-    def __init__(self, message=''):
+    def __init__(self, data=None):
         super().__init__()
-        if message:
-            self._message = message
+
+        if isinstance(data, str) and data:
+            self._data['error_description'] = data
+        elif isinstance(data, dict):
+            self._data.update(data)
 
     @property
-    def message(self):
-        return self._message
+    def data(self):
+        return self._data
+
+    @property
+    def error(self):
+        return self.data.get('error', 'exception')
+
+    @property
+    def description(self):
+        return self.data.get('description', 'Unknown exception occurred')
+
+    @property
+    def code(self):
+        return self.data.get('code', '500')
 
 
 class TubedOAuthException(TubedAPIException):

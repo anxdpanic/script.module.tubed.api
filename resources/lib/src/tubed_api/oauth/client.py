@@ -46,13 +46,21 @@ class Client:
             raise OAuthRequestFailed(payload)
 
         if response.status_code != requests.codes.ok:  # pylint: disable=no-member
-            raise OAuthRequestFailed('Code request failed with status code %s' %
-                                     str(response.status_code))
+            raise OAuthRequestFailed({
+                'error': 'code_request_failed',
+                'error_description': 'Code request failed with status code %s' %
+                                     str(response.status_code),
+                'code': str(response.status_code)
+            })
 
         if response.headers.get('content-type', '').startswith('application/json'):
             return json.loads(json.dumps(payload), object_hook=object_hook)
 
-        raise OAuthRequestFailed('Code request failed with an unknown response')
+        raise OAuthRequestFailed({
+            'error': 'code_request_failed_unknown',
+            'error_description': 'Code request failed with an unknown response',
+            'code': str(response.status_code)
+        })
 
     def request_access_token(self, code):
         data = {
@@ -76,13 +84,21 @@ class Client:
                 raise OAuthRequestFailed(payload)
 
         if (response.status_code != requests.codes.ok) and not pending:  # pylint: disable=no-member
-            raise OAuthRequestFailed('Access token request failed with status code %s' %
-                                     str(response.status_code))
+            raise OAuthRequestFailed({
+                'error': 'access_token_request_failed',
+                'error_description': 'Access token request failed with status code %s' %
+                                     str(response.status_code),
+                'code': str(response.status_code)
+            })
 
         if response.headers.get('content-type', '').startswith('application/json'):
             return json.loads(json.dumps(payload), object_hook=object_hook)
 
-        raise OAuthRequestFailed('Access token request failed with an unknown response')
+        raise OAuthRequestFailed({
+            'error': 'access_token_request_failed_unknown',
+            'error_description': 'Access token request failed with an unknown response',
+            'code': str(response.status_code)
+        })
 
     def refresh_token(self, token):
         data = {
@@ -105,8 +121,12 @@ class Client:
             raise OAuthRequestFailed(payload)
 
         if response.status_code != requests.codes.ok:  # pylint: disable=no-member
-            raise OAuthRequestFailed('Refreshing token failed with status code %s' %
-                                     str(response.status_code))
+            raise OAuthRequestFailed({
+                'error': 'refresh_token_request_failed',
+                'error_description': 'Refreshing token failed with status code %s' %
+                                     str(response.status_code),
+                'code': str(response.status_code)
+            })
 
         if response.headers.get('content-type', '').startswith('application/json'):
             return payload['access_token'], time.time() + int(payload.get('expires_in', 3600))
@@ -127,7 +147,11 @@ class Client:
             raise OAuthRequestFailed(payload)
 
         if response.status_code != requests.codes.ok:  # pylint: disable=no-member
-            raise OAuthRequestFailed('Token revocation failed')
+            raise OAuthRequestFailed({
+                'error': 'revoke_token_request_failed',
+                'error_description': 'Token revocation failed',
+                'code': str(response.status_code)
+            })
 
     def _post(self, url, data):
         response = requests.post(url, data=data, headers=self.headers)

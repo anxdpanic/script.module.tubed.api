@@ -336,7 +336,11 @@ class VideoInfo:
             return url
 
         if not cipher:
-            raise CipherNotFound('Cipher not found')
+            raise CipherNotFound({
+                'error': 'cipher_not_found',
+                'error_description': 'Cipher not found',
+                'code': '404'
+            })
 
         signature_param = 'signature'
         match = re.search('/sp/(?P<signature_param>[^/]+)', url)
@@ -457,7 +461,11 @@ class VideoInfo:
 
         status = self.playability(playability_status)
         if not status['playable']:
-            raise ContentRestricted(status['reason'])
+            raise ContentRestricted({
+                'error': 'content_restricted',
+                'error_description': status['reason'],
+                'code': '403'
+            })
 
         metadata['subtitles'] = Subtitles(video_id, captions).retrieve()
 
@@ -529,7 +537,11 @@ class VideoInfo:
         if not generated_manifest and mpd_url:
             mpd_url = self._decipher_signature(cipher, mpd_url)
             if not mpd_url:
-                raise CipherFailedDecipher('Failed to decipher signature')
+                raise CipherFailedDecipher({
+                    'error': 'cipher_failed_decipher',
+                    'error_description': 'Failed to decipher signature',
+                    'code': '500'
+                })
 
         video_stream = {
             'url': mpd_url,
