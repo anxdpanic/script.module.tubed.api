@@ -19,14 +19,24 @@ from ...utils.json import object_hook
 def _status_response(response):
     if 200 <= response.status_code < 300:
         payload = {
-            "success": True,
-            "code": response.status_code
+            'error': {
+                'message': 'v3 Data API request was successful',
+                'errors': [{
+                    'reason': 'v3RequestSucceeded'
+                }],
+                'code': response.status_code
+            }
         }
 
     else:
         payload = {
-            "success": False,
-            "code": response.status_code
+            'error': {
+                'message': 'v3 Data API request failed',
+                'errors': [{
+                    'reason': 'v3RequestFailed'
+                }],
+                'code': response.status_code
+            }
         }
 
     return json.loads(json.dumps(payload), object_hook=object_hook)
