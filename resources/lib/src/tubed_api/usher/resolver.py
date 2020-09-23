@@ -8,9 +8,6 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-import json
-
-from ..utils.json import object_hook
 from .lib.quality import Quality
 from .lib.video_info import VideoInfo
 
@@ -22,4 +19,4 @@ def resolve(video_id, quality=None, language='en-US', region='US'):
     video_info = VideoInfo(language, region)
     video = video_info.get_video(video_id, quality)
 
-    return json.loads(json.dumps(video), object_hook=object_hook)
+    return video
