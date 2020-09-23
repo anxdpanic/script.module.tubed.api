@@ -10,7 +10,7 @@
 
 import json
 
-from ...utils.json import object_hook
+from ..utils.json import object_hook
 from .lib.quality import Quality
 from .lib.video_info import VideoInfo
 

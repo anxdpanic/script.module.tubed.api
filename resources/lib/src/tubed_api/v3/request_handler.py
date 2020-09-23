@@ -13,7 +13,7 @@ import json
 from requests import Session
 from requests.adapters import HTTPAdapter
 
-from ...utils.json import object_hook
+from ..utils.json import object_hook
 
 
 def _status_response(response):

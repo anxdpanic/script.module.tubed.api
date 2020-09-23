@@ -16,14 +16,14 @@ from ipaddress import ip_address
 import requests
 import xbmc  # pylint: disable=import-error
 import xbmcgui  # pylint: disable=import-error
+import xbmcvfs  # pylint: disable=import-error
+
+from ..constants import TEMP_DIRECTORY
 
 
 class RequestHandler(BaseHTTPRequestHandler):
+    cache_path = xbmcvfs.translatePath(TEMP_DIRECTORY)
     chunk_size = 1024 * 64
-
-    def __init__(self, cache_path, request, client_address, server):
-        self.cache_path = cache_path
-        super().__init__(request, client_address, server)
 
     def connection_allowed(self):
         return ip_address(self.client_address[0]).is_private

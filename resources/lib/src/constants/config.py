@@ -8,10 +8,5 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-ACCESS_TOKEN = ''
-API_KEY = ''
-CLIENT_ID = ''
-CLIENT_SECRET = ''
-
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET',
-           'oauth', 'usher', 'utils', 'v3', 'exceptions']
+ADDON_ID = 'script.module.tubed.api'
+TEMP_DIRECTORY = 'special://temp/' + ADDON_ID

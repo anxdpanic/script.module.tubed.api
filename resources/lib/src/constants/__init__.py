@@ -8,10 +8,11 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-ACCESS_TOKEN = ''
-API_KEY = ''
-CLIENT_ID = ''
-CLIENT_SECRET = ''
+from .config import ADDON_ID
+from .config import TEMP_DIRECTORY
 
-__all__ = ['ACCESS_TOKEN', 'API_KEY', 'CLIENT_ID', 'CLIENT_SECRET',
-           'oauth', 'usher', 'utils', 'v3', 'exceptions']
+# the actual constants
+__all__ = ['ADDON_ID', 'TEMP_DIRECTORY']
+
+# the modules containing the constants
+__all__ += ['config']
