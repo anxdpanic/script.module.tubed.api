@@ -13,9 +13,9 @@ import time
 
 import requests
 
-from ...utils.json import object_hook
 from ..exceptions import OAuthInvalidGrant
 from ..exceptions import OAuthRequestFailed
+from ..utils.json import object_hook
 
 
 class Client:

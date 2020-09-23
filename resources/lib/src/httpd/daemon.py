@@ -16,11 +16,12 @@ import requests
 import xbmc  # pylint: disable=import-error
 import xbmcvfs  # pylint: disable=import-error
 
+from ..constants import TEMP_DIRECTORY
 from .handler import RequestHandler
 
 
 class HTTPDaemon(xbmc.Monitor):
-    cache_path = xbmcvfs.translatePath('special://temp/script.module.tubed.api')
+    cache_path = xbmcvfs.translatePath(TEMP_DIRECTORY)
 
     def __init__(self):
         self._address = '127.0.0.1'

@@ -9,8 +9,8 @@
 """
 
 from .httpd.daemon import HTTPDaemon
-from .utils.time import now
-from .utils.time import timestamp_diff
+from .tubed_api.utils.time import now
+from .tubed_api.utils.time import timestamp_diff
 
 
 def invoke():
