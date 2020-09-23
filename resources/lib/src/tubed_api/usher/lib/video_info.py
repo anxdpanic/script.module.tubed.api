@@ -21,7 +21,6 @@ from urllib.parse import quote
 import requests
 import xbmcvfs  # pylint: disable=import-error
 
-from ... import ACCESS_TOKEN
 from ...exceptions import CipherFailedDecipher
 from ...exceptions import CipherNotFound
 from ...exceptions import ContentRestricted
@@ -45,6 +44,8 @@ class VideoInfo:
     }
 
     def __init__(self, language='en-US', region='US'):
+        from ... import ACCESS_TOKEN  # pylint: disable=import-outside-toplevel
+
         self._access_token = ACCESS_TOKEN
         self._language = language
         self._region = region

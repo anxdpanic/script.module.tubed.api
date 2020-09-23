@@ -27,9 +27,15 @@ class Client:
         'Content-Type': 'application/x-www-form-urlencoded'
     }
 
-    def __init__(self, client_id, client_secret):
-        self.client_id = client_id
-        self.client_secret = client_secret
+    def __init__(self, client_id='', client_secret=''):
+        if client_id and client_secret:
+            self.client_id = client_id
+            self.client_secret = client_secret
+        else:
+            from .. import CLIENT_ID  # pylint: disable=import-outside-toplevel
+            from .. import CLIENT_SECRET  # pylint: disable=import-outside-toplevel
+            self.client_id = CLIENT_ID
+            self.client_secret = CLIENT_SECRET
 
     def request_codes(self):
         data = {

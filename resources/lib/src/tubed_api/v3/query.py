@@ -10,8 +10,6 @@
 
 from copy import deepcopy
 
-from .. import ACCESS_TOKEN
-from .. import API_KEY
 from ..exceptions import ResourceUnavailable
 from .request_handler import v3_request
 
@@ -84,6 +82,9 @@ class V3Query(Query):
             headers = {}
         else:
             headers = deepcopy(headers)
+
+        from .. import ACCESS_TOKEN  # pylint: disable=import-outside-toplevel
+        from .. import API_KEY  # pylint: disable=import-outside-toplevel
 
         if API_KEY:
             parameters.update({
