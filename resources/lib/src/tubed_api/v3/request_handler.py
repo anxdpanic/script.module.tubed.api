@@ -8,12 +8,8 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-import json
-
 from requests import Session
 from requests.adapters import HTTPAdapter
-
-from ..utils.json import object_hook
 
 
 def _status_response(response):
@@ -39,7 +35,7 @@ def _status_response(response):
             }
         }
 
-    return json.loads(json.dumps(payload), object_hook=object_hook)
+    return payload
 
 
 def v3_request(method, url, parameters, data, headers):
@@ -55,6 +51,6 @@ def v3_request(method, url, parameters, data, headers):
     response.encoding = 'utf-8'
 
     try:
-        return response.json(object_hook=object_hook)
+        return response.json()
     except ValueError:
         return _status_response(response)

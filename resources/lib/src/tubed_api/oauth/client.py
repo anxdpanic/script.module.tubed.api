@@ -8,14 +8,12 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-import json
 import time
 
 import requests
 
 from ..exceptions import OAuthInvalidGrant
 from ..exceptions import OAuthRequestFailed
-from ..utils.json import object_hook
 
 
 class Client:
@@ -28,12 +26,14 @@ class Client:
     }
 
     def __init__(self, client_id='', client_secret=''):
+        # pylint: disable=import-outside-toplevel
+
         if client_id and client_secret:
             self.client_id = client_id
             self.client_secret = client_secret
         else:
-            from .. import CLIENT_ID  # pylint: disable=import-outside-toplevel
-            from .. import CLIENT_SECRET  # pylint: disable=import-outside-toplevel
+            from .. import CLIENT_ID
+            from .. import CLIENT_SECRET
             self.client_id = CLIENT_ID
             self.client_secret = CLIENT_SECRET
 
@@ -60,7 +60,7 @@ class Client:
             })
 
         if response.headers.get('content-type', '').startswith('application/json'):
-            return json.loads(json.dumps(payload), object_hook=object_hook)
+            return payload
 
         raise OAuthRequestFailed({
             'error': 'code_request_failed_unknown',
@@ -98,7 +98,7 @@ class Client:
             })
 
         if response.headers.get('content-type', '').startswith('application/json'):
-            return json.loads(json.dumps(payload), object_hook=object_hook)
+            return payload
 
         raise OAuthRequestFailed({
             'error': 'access_token_request_failed_unknown',
