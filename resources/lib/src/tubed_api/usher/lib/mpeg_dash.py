@@ -59,10 +59,6 @@ class ManifestGenerator:
             'reason': reason
         }
 
-        match = re.search('codecs="(?P<codec>[^"]+)"', discarded['audio']['codec'])
-        if match:
-            discarded['audio']['codec'] = match.group('codec')
-
         if fmt:
             bitrate = int(fmt.get('audio', {}).get('bitrate', 0))
             if bitrate > 0:
@@ -83,10 +79,6 @@ class ManifestGenerator:
             },
             'reason': reason
         }
-
-        match = re.search('codecs="(?P<codec>[^"]+)"', discarded['video']['codec'])
-        if match:
-            discarded['video']['codec'] = match.group('codec')
 
         if stream.get('quality_label'):
             discarded['video']['quality_label'] = str(stream['quality_label'])
@@ -175,9 +167,9 @@ class ManifestGenerator:
             stream_map['itag'] = str(stream_map.get('itag'))
 
             mime_type = stream_map.get('mimeType')
-            mime_type = unquote(mime_type)
+            mime_type = unquote(mime_type).split(';')
 
-            mime = mime_type.split(';')[0]
+            mime = mime_type[0]
             itag = stream_map.get('itag')
 
             if mime not in data:
@@ -414,9 +406,9 @@ class ManifestGenerator:
                             stream_info['audio']['bandwidth'] = int(data[mime][itag]['bandwidth'])
 
                         mpd_list.append(''.join(['\t\t\t<Representation id="',
-                                                 itag, '" ', data[mime][itag]['codec'],
-                                                 ' bandwidth="', str(data[mime][itag]['bandwidth']),
-                                                 '">\n']))
+                                                 itag, '" codecs="',
+                                                 data[mime][itag]['codec'], '" bandwidth="',
+                                                 str(data[mime][itag]['bandwidth']), '">\n']))
 
                         mpd_list.append('\t\t\t\t<AudioChannelConfiguration '
                                         'schemeIdUri="urn:mpeg:dash:23003:3:'
@@ -457,8 +449,8 @@ class ManifestGenerator:
                                     stream_info['video']['codec'] = video_codec
 
                         video_codec = data[mime][itag]['codec']
-                        mpd_list.append(''.join(['\t\t\t<Representation id="', itag, '" ',
-                                                 video_codec, ' startWithSAP="1" bandwidth="',
+                        mpd_list.append(''.join(['\t\t\t<Representation id="', itag, '" codecs="',
+                                                 video_codec, '" startWithSAP="1" bandwidth="',
                                                  str(data[mime][itag]['bandwidth']), '" width="',
                                                  str(data[mime][itag]['width']), '" height="',
                                                  str(data[mime][itag]['height']), '" frameRate="',
