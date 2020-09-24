@@ -108,14 +108,14 @@ class ManifestGenerator:
         if quality_object.limit_30fps and mime_type in stream_data:
             # if 30 fps limit enabled, discard streams that are greater than 30fps
             if any(itag for itag in data[mime_type].keys() if data[mime_type][itag]['fps'] <= 30):
-                for itag in data[mime_type].keys():
+                for itag in list(data[mime_type].keys()):
                     if data[mime_type][itag]['fps'] > 30:
                         self.discard_video(mime_type, itag, data[mime_type][itag], 'frame rate')
                         del data[mime_type][itag]
 
         if discard_mime in data:
             # discard streams with unwanted mime type
-            for itag in data[discard_mime].keys():
+            for itag in list(data[discard_mime].keys()):
                 self.discard_video(discard_mime, itag, data[discard_mime][itag], 'mime type')
                 del data[discard_mime][itag]
 
@@ -502,11 +502,7 @@ class ManifestGenerator:
             pass
 
         filename = '{path}{video_id}.mpd'.format(path=self.path, video_id=video_id)
-        try:
-            with xbmcvfs.File(filename, 'w') as open_file:
-                _ = open_file.write(str(manifest_contents))
+        with open(filename, 'wb') as file_handle:
+            _ = file_handle.write(bytes(manifest_contents, encoding='utf-8'))
 
-            return 'http://127.0.0.1:52520/{video_id}.mpd'.format(video_id=video_id), stream_info
-
-        except:  # pylint: disable=bare-except
-            return None, None
+        return 'http://127.0.0.1:52520/{video_id}.mpd'.format(video_id=video_id), stream_info
