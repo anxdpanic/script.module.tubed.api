@@ -76,34 +76,40 @@ class VideoInfo:
             self._itags = json.load(itag_file)
 
     def get_watch_page(self, video_id):
-        params = {
+        parameters = {
             'v': video_id,
             'hl': self.language,
-            'gl': self.region
+            'gl': self.region,
+            'has_verified': '1',
+            'bpctr': '9999999999',
         }
 
         if self._access_token:
-            params['access_token'] = self._access_token
+            parameters['access_token'] = self._access_token
 
-        result = requests.get('https://www.youtube.com/watch', params=params,
+        result = requests.get('https://www.youtube.com/watch', params=parameters,
                               headers=self.headers, allow_redirects=True)
+        result.encoding = 'utf-8'
+
         return {
             'html': result.text,
             'cookies': result.cookies
         }
 
     def get_embed_page(self, video_id):
-        params = {
+        parameters = {
             'hl': self.language,
             'gl': self.region
         }
 
         if self._access_token:
-            params['access_token'] = self._access_token
+            parameters['access_token'] = self._access_token
 
         url = 'https://www.youtube.com/embed/{video_id}'.format(video_id=video_id)
 
-        result = requests.get(url, params=params, headers=self.headers, allow_redirects=True)
+        result = requests.get(url, params=parameters, headers=self.headers, allow_redirects=True)
+        result.encoding = 'utf-8'
+
         return {
             'html': result.text,
             'cookies': result.cookies
@@ -122,56 +128,26 @@ class VideoInfo:
     @staticmethod
     def get_player_config(html):
         config = {}
-        lead = 'ytplayer.config = '
-        tails = [
-            'ytplayer.load',
-            'ytplayer.web_player_context_config'
-        ]
 
-        for tail in tails:
-            pos = html.find(lead)
-            if pos >= 0:
-                html2 = html[pos + len(lead):]
-                pos = html2.find(tail)
-                if pos >= 0:
-                    config = html2[:pos].rstrip().rstrip(';').rstrip()
-                    try:
-                        config = json.loads(config)
-                        break
+        found = re.search(
+            r'window\.ytplayer\s*=\s*{}\s*;\s*ytcfg\.set\((?P<config>.+?)\)\s*;\s*ytcfg', html
+        )
+        if found:
+            config = json.loads(found.group('config'))
 
-                    except (TypeError, ValueError):
-                        config = {}
+        return config
 
-        try:
-            result = re.search(r'var blankSwfConfig\s*=\s*(?P<player_config>{.+?})'
-                               r';\s*var fillerData', html)
-            player_config = json.loads(result.group('player_config'))
+    @staticmethod
+    def get_player_client(html):
+        context = {}
 
-        except:  # pylint: disable=bare-except
-            player_config = {}
+        found = re.search(
+            r'ytcfg\.set\((?P<context>{"INNERTUBE_CONTEXT":.+?)\)\s*;', html
+        )
+        if found:
+            context = json.loads(found.group('context'))
 
-        player_config.update(config)
-
-        if 'args' not in player_config:
-            player_config['args'] = {}
-
-        try:
-            player_response = player_config['args'].get('player_response', {})
-            player_response = json.loads(player_response)
-
-        except:  # pylint: disable=bare-except
-            player_response = {}
-
-        try:
-            result = re.search(r'window\["ytInitialPlayerResponse"]\s*=\s*\(\s*'
-                               r'(?P<player_response>{.+?})\s*\);', html)
-            player_config['args']['player_response'] = json.loads(result.group('player_response'))
-        except (AttributeError, TypeError):
-            player_config['args']['player_response'] = {}
-
-        player_config['args']['player_response'].update(player_response)
-
-        return player_config
+        return context.get('INNERTUBE_CONTEXT', {}).get('client', {})
 
     @staticmethod
     def _curl_headers(cookies):
@@ -296,40 +272,11 @@ class VideoInfo:
         if not html:
             return ''
 
-        _player_config = '{}'
-        player_config = dict()
-
-        def _find_config(lead, tail):
-            if html.find(tail) == -1:
-                tail = '});'
-
-            pos = html.find(lead)
-
-            if pos >= 0:
-                html2 = html[pos + len(lead):]
-                pos = html2.find(tail)
-
-                if pos >= 0:
-                    return html2[:pos]
-
-            return None
-
-        _player_config = \
-            _find_config('yt.setConfig({\'PLAYER_CONFIG\': ', ',\'EXPERIMENT_FLAGS\':')
-
-        if _player_config is None:
-            _player_config = \
-                _find_config(',\'PLAYER_CONFIG\': ', 'yt.setConfig({INNERTUBE_API_VERSION:')
-
-        if _player_config is None:
-            _player_config = '{}'
-
-        try:
-            player_config.update(json.loads(_player_config))
-        except TypeError:
-            pass
-        finally:
-            javascript_url = player_config.get('assets', {}).get('js', '')
+        found = re.search(
+            r'<script src="(?P<url>[^"]+?)"\s*name="player_[^/]+?/base"\s*>\s*</script\s*>', html
+        )
+        if found:
+            javascript_url = found.group('url')
 
         return _normalize(javascript_url)
 
@@ -363,44 +310,39 @@ class VideoInfo:
         return ''
 
     def get_video(self, video_id, quality=None):  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-        headers = self.headers
+        headers = self.headers.copy()
         if self._access_token:
             headers['Authorization'] = 'Bearer %s' % self._access_token
-
-        params = {
-            'hl': self.language,
-            'gl': self.region,
-            'ssl_stream': '1',
-            'html5': '1'
-        }
 
         page_result = self.get_watch_page(video_id)
         html = page_result.get('html')
         cookies = page_result.get('cookies')
 
         player_config = self.get_player_config(html)
+        player_client = self.get_player_client(html)
         curl_headers = self._curl_headers(cookies)
 
         if not cookies:
             cookies = {}
 
-        player_args = player_config.get('args', {})
-        player_response = player_args.get('player_response', {})
-        playability_status = player_response.get('playabilityStatus', {})
+        params = {
+            'hl': player_client.get('hl', 'en'),
+            'gl': player_client.get('gl', 'US'),
+            'ssl_stream': '1',
+            'html5': '1',
+            'video_id': video_id,
+            'eurl': ''.join(['https://youtube.googleapis.com/v/', video_id]),
+            'sts': player_config.get('STS', ''),
+            'c': player_client.get('clientName', 'WEB'),
+            'cver': player_client.get('clientVersion', '2.20200923.01.00'),
+            'cbr': player_client.get('browserName', 'Chrome'),
+            'cbrver': player_client.get('browserVersion', '53.0.2785.143'),
+            'cos': player_client.get('osName', 'Windows'),
+            'cosver': player_client.get('osVersion', '10.0')
+        }
 
-        params['video_id'] = video_id
-        params['eurl'] = ''.join(['https://youtube.googleapis.com/v/', video_id])
-        params['sts'] = player_config.get('sts', '')
-        params['t'] = player_args.get('t', '')
-        params['c'] = player_args.get('c', 'WEB')
-        params['cver'] = player_args.get('cver', '1.20170712')
-        params['cplayer'] = player_args.get('cplayer', 'UNIPLAYER')
-        params['cbr'] = player_args.get('cbr', 'Chrome')
-        params['cbrver'] = player_args.get('cbrver', '53.0.2785.143')
-        params['cos'] = player_args.get('cos', 'Windows')
-        params['cosver'] = player_args.get('cosver', '10.0')
-
-        fallback_player_response = {}
+        player_response = {}
+        playability_status = {}
 
         el_values = ['detailpage', 'embedded']
         for el_value in el_values:
@@ -412,15 +354,13 @@ class VideoInfo:
 
             parameters = dict(parse_qsl(data))
             playability_status['fallback'] = parameters.get('status', '') != 'fail'
-            fallback_player_response = json.loads(parameters.get('player_response', '{}'))
+            player_response = json.loads(parameters.get('player_response', '{}'))
 
-            if (fallback_player_response.get('streamingData', {}).get('formats', []) or
-                    fallback_player_response.get('streamingData', {}).get('hlsManifestUrl', '')):
+            if (player_response.get('streamingData', {}).get('formats', []) or
+                    player_response.get('streamingData', {}).get('hlsManifestUrl', '')):
                 break
 
-        if not player_response:
-            player_response = fallback_player_response
-            playability_status = player_response.get('playabilityStatus', {})
+        playability_status.update(player_response.get('playabilityStatus', {}))
 
         playback_tracking = player_response.get('playbackTracking', {})
         captions = player_response.get('captions', {})
@@ -428,8 +368,7 @@ class VideoInfo:
         is_live_content = video_details.get('isLiveContent') is True
         streaming_data = player_response.get('streamingData', {})
 
-        live_url = (streaming_data.get('hlsManifestUrl', '') or
-                    fallback_player_response.get('streamingData', {}).get('hlsManifestUrl', ''))
+        live_url = streaming_data.get('hlsManifestUrl', '')
         is_live = is_live_content and live_url
 
         metadata = {
@@ -501,8 +440,7 @@ class VideoInfo:
         adaptive_formats = streaming_data.get('adaptiveFormats', [])
         # standard_formats = streaming_data.get('formats', [])
 
-        mpd_url = streaming_data.get('dashManifestUrl', '') or \
-                  fallback_player_response.get('streamingData', {}).get('dashManifestUrl', '')
+        mpd_url = streaming_data.get('dashManifestUrl', '')
 
         license_data = {
             'url': None,
@@ -521,7 +459,7 @@ class VideoInfo:
 
         if self.requires_cipher(adaptive_formats):
             javascript_url = \
-                self.get_player_javascript(video_id, player_config.get('assets', {}).get('js', ''))
+                self.get_player_javascript(video_id, player_config.get('PLAYER_JS_URL', ''))
             cipher = Cipher(javascript_url)
 
         generated_manifest = False
