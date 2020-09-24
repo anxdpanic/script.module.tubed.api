@@ -15,6 +15,8 @@ from .lib.video_info import VideoInfo
 def resolve(video_id, quality=None, language='en-US', region='US'):
     if not quality:
         quality = Quality('mp4')
+    elif isinstance(quality, (int, str)):
+        quality = Quality(quality)
 
     video_info = VideoInfo(language, region)
     video = video_info.get_video(video_id, quality)
