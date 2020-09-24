@@ -12,6 +12,7 @@
 """
 
 import json
+import os
 import random
 import re
 from copy import deepcopy
@@ -70,7 +71,8 @@ class VideoInfo:
         return self._itags
 
     def _load_itags(self):
-        with xbmcvfs.File('itags.json') as itag_file:
+        filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'itags.json')
+        with xbmcvfs.File(filename, 'r') as itag_file:
             self._itags = json.load(itag_file)
 
     def get_watch_page(self, video_id):
@@ -164,7 +166,7 @@ class VideoInfo:
             result = re.search(r'window\["ytInitialPlayerResponse"]\s*=\s*\(\s*'
                                r'(?P<player_response>{.+?})\s*\);', html)
             player_config['args']['player_response'] = json.loads(result.group('player_response'))
-        except TypeError:
+        except (AttributeError, TypeError):
             player_config['args']['player_response'] = {}
 
         player_config['args']['player_response'].update(player_response)
@@ -438,8 +440,8 @@ class VideoInfo:
         }
 
         metadata['video']['id'] = video_details.get('videoId', video_id)
-        metadata['video']['title'] = video_details.get('title', u'').encode('utf-8')
-        metadata['channel']['author'] = video_details.get('author', u'').encode('utf-8')
+        metadata['video']['title'] = video_details.get('title', '')
+        metadata['channel']['author'] = video_details.get('author', '')
         metadata['channel']['id'] = video_details.get('channelId', '')
 
         for image_meta in self.image_map():
