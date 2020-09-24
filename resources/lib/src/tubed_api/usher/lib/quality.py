@@ -10,6 +10,18 @@
 
 
 class Quality:
+    MAP = {
+        0: 240,
+        1: 360,
+        2: 480,
+        3: 720,
+        4: 1080,
+        5: 1440,
+        6: 2160,
+        7: 4320,
+        8: 'mp4',
+        9: 'webm'
+    }
 
     def __init__(self, height, limit_30fps=True, hdr=False, av1=False):
 
@@ -21,22 +33,9 @@ class Quality:
 
         self._av1 = av1
 
-        self._map = {
-            0: 240,
-            1: 360,
-            2: 480,
-            3: 720,
-            4: 1080,
-            5: 1440,
-            6: 2160,
-            7: 4320,
-            8: 'mp4',
-            9: 'webm'
-        }
-
     @property
     def map(self):
-        return self._map
+        return self.MAP
 
     @property
     def quality(self):
@@ -68,7 +67,7 @@ class Quality:
         return self._av1
 
     def _index_of_height(self, height):
-        for index, quality in self.map.items():
+        for index, quality in self.MAP.items():
             if height == quality:
                 return index
 
