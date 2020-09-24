@@ -502,11 +502,7 @@ class ManifestGenerator:
             pass
 
         filename = '{path}{video_id}.mpd'.format(path=self.path, video_id=video_id)
-        try:
-            with xbmcvfs.File(filename, 'w') as open_file:
-                _ = open_file.write(str(manifest_contents))
+        with open(filename, 'wb') as file_handle:
+            _ = file_handle.write(bytes(manifest_contents, encoding='utf-8'))
 
-            return 'http://127.0.0.1:52520/{video_id}.mpd'.format(video_id=video_id), stream_info
-
-        except:  # pylint: disable=bare-except
-            return None, None
+        return 'http://127.0.0.1:52520/{video_id}.mpd'.format(video_id=video_id), stream_info

@@ -44,7 +44,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             dash_manifest = self._get_path()
 
             try:
-                with open(dash_manifest, 'rb') as open_file:
+                with open(dash_manifest, 'rb') as file_handle:
                     self.send_response(200)
                     self.send_header('Content-Type', 'application/xml+dash')
                     self.send_header('Content-Length', str(os.path.getsize(dash_manifest)))
@@ -52,7 +52,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
                     chunk = True
                     while chunk:
-                        chunk = open_file.read(self.chunk_size)
+                        chunk = file_handle.read(self.chunk_size)
                         if chunk:
                             self.wfile.write(chunk)
 
