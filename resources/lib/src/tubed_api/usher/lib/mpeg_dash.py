@@ -108,14 +108,14 @@ class ManifestGenerator:
         if quality_object.limit_30fps and mime_type in stream_data:
             # if 30 fps limit enabled, discard streams that are greater than 30fps
             if any(itag for itag in data[mime_type].keys() if data[mime_type][itag]['fps'] <= 30):
-                for itag in data[mime_type].keys():
+                for itag in list(data[mime_type].keys()):
                     if data[mime_type][itag]['fps'] > 30:
                         self.discard_video(mime_type, itag, data[mime_type][itag], 'frame rate')
                         del data[mime_type][itag]
 
         if discard_mime in data:
             # discard streams with unwanted mime type
-            for itag in data[discard_mime].keys():
+            for itag in list(data[discard_mime].keys()):
                 self.discard_video(discard_mime, itag, data[discard_mime][itag], 'mime type')
                 del data[discard_mime][itag]
 
