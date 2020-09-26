@@ -18,12 +18,6 @@ from ..exceptions import OAuthRequestFailed
 
 class Client:
     # https://developers.google.com/youtube/v3/guides/auth/devices
-    headers = {
-        'Host': 'accounts.google.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                      '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
 
     def __init__(self, client_id='', client_secret=''):
         # pylint: disable=import-outside-toplevel
@@ -38,12 +32,19 @@ class Client:
             self.client_secret = CLIENT_SECRET
 
     def request_codes(self):
+        headers = {
+            'Host': 'accounts.google.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                          '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
         data = {
             'client_id': self.client_id,
             'scope': 'https://www.googleapis.com/auth/youtube'
         }
         response, payload = self._post('https://accounts.google.com/o/oauth2/device/code',
-                                       data=data)
+                                       data=data, headers=headers)
 
         if 'error' in payload:
             payload.update({
@@ -69,6 +70,13 @@ class Client:
         })
 
     def request_access_token(self, code):
+        headers = {
+            'Host': 'www.googleapis.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                          '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
         data = {
             'client_id': self.client_id,
             'client_secret': self.client_secret,
@@ -76,7 +84,8 @@ class Client:
             'grant_type': 'http://oauth.net/grant_type/device/1.0'
         }
 
-        response, payload = self._post('https://www.googleapis.com/oauth2/v4/token', data=data)
+        response, payload = self._post('https://www.googleapis.com/oauth2/v4/token',
+                                       data=data, headers=headers)
 
         pending = False
 
@@ -107,6 +116,13 @@ class Client:
         })
 
     def refresh_token(self, token):
+        headers = {
+            'Host': 'www.googleapis.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                          '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
         data = {
             'client_id': self.client_id,
             'client_secret': self.client_secret,
@@ -114,7 +130,8 @@ class Client:
             'grant_type': 'refresh_token'
         }
 
-        response, payload = self._post('https://www.googleapis.com/oauth2/v4/token', data=data)
+        response, payload = self._post('https://www.googleapis.com/oauth2/v4/token',
+                                       data=data, headers=headers)
 
         if 'error' in payload:
             payload.update({
@@ -140,11 +157,19 @@ class Client:
         return '', ''
 
     def revoke_token(self, token):
+        headers = {
+            'Host': 'accounts.google.com',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                          '(KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
         data = {
             'token': token
         }
 
-        response, payload = self._post('https://accounts.google.com/o/oauth2/revoke', data=data)
+        response, payload = self._post('https://accounts.google.com/o/oauth2/revoke',
+                                       data=data, headers=headers)
 
         if 'error' in payload:
             payload.update({
@@ -159,8 +184,9 @@ class Client:
                 'code': str(response.status_code)
             })
 
-    def _post(self, url, data):
-        response = requests.post(url, data=data, headers=self.headers)
+    @staticmethod
+    def _post(url, data, headers):
+        response = requests.post(url, data=data, headers=headers)
 
         response.encoding = 'utf-8'
 
