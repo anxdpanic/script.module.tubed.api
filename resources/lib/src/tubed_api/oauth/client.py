@@ -8,8 +8,6 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-import time
-
 import requests
 
 from ..exceptions import OAuthInvalidGrant
@@ -152,7 +150,7 @@ class Client:
             })
 
         if response.headers.get('content-type', '').startswith('application/json'):
-            return payload['access_token'], time.time() + int(payload.get('expires_in', 3600))
+            return payload['access_token'], int(payload.get('expires_in', 3600))
 
         return '', ''
 
