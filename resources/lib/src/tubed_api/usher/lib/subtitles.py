@@ -48,7 +48,7 @@ class Subtitles:
         for language in self.translation_languages:
             subtitle = self._get(language=language.get('languageCode'))
             if subtitle:
-                list_of_subs.extend(subtitle)
+                list_of_subs.append(subtitle)
 
         return list(set(list_of_subs))
 
@@ -85,6 +85,7 @@ class Subtitles:
         if subtitle_url:
             return (caption.get('languageCode'),
                     self._get_language_name(caption),
+                    caption.get('kind'),
                     subtitle_url)
 
         return None
