@@ -98,6 +98,11 @@ class V3Query(Query):
             'Accept-Encoding': 'gzip, deflate'
         })
 
+        if method.lower() == 'post':
+            headers.update({
+                'Content-Type': 'application/json'
+            })
+
         if ACCESS_TOKEN:
             headers.update({
                 'Authorization': 'Bearer {access_token}'.format(access_token=ACCESS_TOKEN)
