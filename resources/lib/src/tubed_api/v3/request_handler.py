@@ -45,8 +45,12 @@ def v3_request(method, url, parameters, data, headers):
     session.mount('http://', adapter)
     session.mount('https://', adapter)
 
-    response = getattr(session, method)(url, params=parameters, data=data,
-                                        headers=headers, timeout=(2, 60))
+    if data and isinstance(data, dict):
+        response = getattr(session, method)(url, params=parameters, json=data,
+                                            headers=headers, timeout=(2, 60))
+    else:
+        response = getattr(session, method)(url, params=parameters, data=data,
+                                            headers=headers, timeout=(2, 60))
 
     response.encoding = 'utf-8'
 
