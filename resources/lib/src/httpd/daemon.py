@@ -14,8 +14,10 @@ from threading import Thread
 
 import requests
 import xbmc  # pylint: disable=import-error
+import xbmcaddon  # pylint: disable=import-error
 import xbmcvfs  # pylint: disable=import-error
 
+from ..constants import ADDON_ID
 from ..constants import TEMP_DIRECTORY
 from .handler import RequestHandler
 
@@ -25,7 +27,7 @@ class HTTPDaemon(xbmc.Monitor):
 
     def __init__(self):
         self._address = '127.0.0.1'
-        self._port = 52520
+        self._port = xbmcaddon.Addon(ADDON_ID).getSettingInt('httpd.port') or 52520
 
         self._httpd = None
         self._thread = None
