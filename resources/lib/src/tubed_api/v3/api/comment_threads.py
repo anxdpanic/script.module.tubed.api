@@ -14,8 +14,8 @@ from ..query import query
 
 # https://developers.google.com/youtube/v3/docs/commentThreads/list
 @query
-def get(parameters=None):
-    return V3Query('get', 'commentThreads', parameters=parameters)
+def get(parameters=None, unauthorized=False):
+    return V3Query('get', 'commentThreads', parameters=parameters, unauthorized=unauthorized)
 
 
 # https://developers.google.com/youtube/v3/docs/commentThreads/insert
