@@ -72,7 +72,7 @@ class Query:
 class V3Query(Query):
     _base_url = 'https://www.googleapis.com/youtube/v3/'
 
-    def __init__(self, method, path, parameters=None, data=None, headers=None):
+    def __init__(self, method, path, parameters=None, data=None, headers=None, unauthorized=False):
         if parameters is None:
             parameters = {}
         else:
@@ -103,7 +103,7 @@ class V3Query(Query):
                 'Content-Type': 'application/json'
             })
 
-        if ACCESS_TOKEN:
+        if ACCESS_TOKEN and not unauthorized:
             headers.update({
                 'Authorization': 'Bearer {access_token}'.format(access_token=ACCESS_TOKEN)
             })
