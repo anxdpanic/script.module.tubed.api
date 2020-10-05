@@ -451,7 +451,7 @@ class VideoInfo:
         license_infos = streaming_data.get('licenseInfos', [])
         for license_info in license_infos:
             if license_info.get('drmFamily') == 'WIDEVINE':
-                license_data['url'] = license_info.get('url', None)
+                license_data['url'] = license_info.get('url', '')
                 if license_data['url']:
                     license_data['proxy'] = 'http://127.0.0.1:52520/widevine||R{SSM}|'
                     license_data['token'] = self._access_token
@@ -463,16 +463,17 @@ class VideoInfo:
             cipher = Cipher(javascript_url)
 
         generated_manifest = False
-        if not license_data.get('url') and not is_live:
+        if not is_live:
             if not quality:
                 quality = Quality('mp4')
 
-            mpd_url, stream_info = ManifestGenerator(self.itags, cipher).generate(
-                video_id,
-                adaptive_formats,
-                video_details.get('lengthSeconds', '0'),
-                quality
-            )
+            mpd_url, stream_info = \
+                ManifestGenerator(self.itags, cipher, license_data).generate(
+                    video_id,
+                    adaptive_formats,
+                    video_details.get('lengthSeconds', '0'),
+                    quality
+                )
             generated_manifest = True
 
         if not generated_manifest and mpd_url:
