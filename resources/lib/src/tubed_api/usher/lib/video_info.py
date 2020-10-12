@@ -20,6 +20,7 @@ from urllib.parse import parse_qsl
 from urllib.parse import quote
 
 import requests
+import xbmcaddon  # pylint: disable=import-error
 import xbmcvfs  # pylint: disable=import-error
 
 from ...exceptions import CipherFailedDecipher
@@ -453,7 +454,9 @@ class VideoInfo:
             if license_info.get('drmFamily') == 'WIDEVINE':
                 license_data['url'] = license_info.get('url', '')
                 if license_data['url']:
-                    license_data['proxy'] = 'http://127.0.0.1:52520/widevine||R{SSM}|'
+                    license_data['proxy'] = 'http://127.0.0.1:%s/widevine||R{SSM}|' % \
+                                            xbmcaddon.Addon('script.module.tubed.api')\
+                                                .getSettingInt('httpd.port') or 52520
                     license_data['token'] = self._access_token
                     break
 

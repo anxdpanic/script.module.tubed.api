@@ -14,6 +14,7 @@ from html import escape
 from urllib.parse import parse_qsl
 from urllib.parse import unquote
 
+import xbmcaddon  # pylint: disable=import-error
 import xbmcgui  # pylint: disable=import-error
 import xbmcvfs  # pylint: disable=import-error
 
@@ -527,4 +528,7 @@ class ManifestGenerator:
             xbmcgui.Window(10000).setProperty('tubed-api-license_url', license_url)
             xbmcgui.Window(10000).setProperty('tubed-api-license_token', license_token)
 
-        return 'http://127.0.0.1:52520/{video_id}.mpd'.format(video_id=video_id), stream_info
+        port = xbmcaddon.Addon('script.module.tubed.api').getSettingInt('httpd.port') or 52520
+
+        return 'http://127.0.0.1:{port}/{video_id}.mpd'.format(port=port, video_id=video_id), \
+               stream_info
