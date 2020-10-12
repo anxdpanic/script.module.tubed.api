@@ -9,4 +9,4 @@
 """
 
 ADDON_ID = 'script.module.tubed.api'
-TEMP_DIRECTORY = 'special://temp/' + ADDON_ID
+TEMP_DIRECTORY = 'special://temp/%s/' % ADDON_ID
