@@ -14,3 +14,12 @@ Example can be found [anxdpanic/plugin.video.tubed/master/resources/lib/src/api/
 
 #### API Documentation:
 https://developers.google.com/youtube/v3/docs
+
+---
+
+Artwork
+-
+    
+Thanks to **[sualfred](https://github.com/sualfred)**
+    
+--- 
