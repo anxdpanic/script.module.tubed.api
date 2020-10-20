@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/anxdpanic/script.module.tubed.api/master/resources/media/icon.png" width="256" height="256" alt="Tubed API">
+
 # Tubed API
 
 ![Build Status](https://img.shields.io/travis/com/anxdpanic/script.module.tubed.api/master.svg)
