@@ -8,6 +8,7 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
+import json
 import re
 from copy import deepcopy
 from html import escape
@@ -19,18 +20,25 @@ import xbmcgui  # pylint: disable=import-error
 import xbmcvfs  # pylint: disable=import-error
 
 from .quality import Quality
+from ...utils.logger import Log
+
+LOG = Log()
 
 
 class ManifestGenerator:
     path = xbmcvfs.translatePath('special://temp/script.module.tubed.api/')
 
     def __init__(self, itags, cipher, license_data=None):
+        self.addon = xbmcaddon.Addon('script.module.tubed.api')
+
         self._cipher = cipher
         self._itags = itags
         self._discarded = []
         if license_data is None:
             license_data = {}
         self.license_data = license_data
+
+        self.component_logging = self.addon.getSettingBool('log.manifest.generator')
 
     @property
     def cipher(self):
@@ -313,6 +321,12 @@ class ManifestGenerator:
         }
 
     def generate(self, video_id, formats, duration, quality_object=None):  # pylint: disable=too-many-branches,too-many-statements,too-many-locals
+        LOG.debug('Generating MPEG-DASH manifest for %s' % video_id)
+
+        if self.component_logging:
+            LOG.debug('Stream information available for %s MPEG-DASH manifest:\n%s' %
+                      (video_id, json.dumps(formats, indent=4)))
+
         if not self._make_dirs():
             return None
 
@@ -528,7 +542,15 @@ class ManifestGenerator:
             xbmcgui.Window(10000).setProperty('tubed-api-license_url', license_url)
             xbmcgui.Window(10000).setProperty('tubed-api-license_token', license_token)
 
-        port = xbmcaddon.Addon('script.module.tubed.api').getSettingInt('httpd.port') or 52520
+        port = self.addon.getSettingInt('httpd.port') or 52520
+        proxy_url = 'http://127.0.0.1:{port}/{video_id}.mpd'.format(port=port, video_id=video_id)
 
-        return 'http://127.0.0.1:{port}/{video_id}.mpd'.format(port=port, video_id=video_id), \
-               stream_info
+        if self.component_logging:
+            LOG.debug('Stream information discard for %s MPEG-DASH manifest:\n%s' %
+                      (video_id, json.dumps(self.discarded, indent=4)))
+            LOG.debug('Stream information used for %s MPEG-DASH manifest:\n%s' %
+                      (video_id, json.dumps(stream_info, indent=4)))
+
+        LOG.debug('Finished generating MPEG-DASH manifest for %s @ %s' % (video_id, proxy_url))
+
+        return proxy_url, stream_info

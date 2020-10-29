@@ -12,5 +12,14 @@
                 </setting>
             </group>
         </category>
+        <category id="debug" label="30004" help="">
+            <group id="1" label="30005">
+                <setting id="log.manifest.generator" type="boolean" label="30006" help="30007">
+                    <level>0</level>
+                    <default>false</default>
+                    <control type="toggle"/>
+                </setting>
+            </group>
+        </category>
     </section>
 </settings>
