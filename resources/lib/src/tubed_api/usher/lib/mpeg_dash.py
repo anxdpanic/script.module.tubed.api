@@ -509,7 +509,7 @@ class ManifestGenerator:
         manifest_contents = ''.join(mpd_list)
 
         if self.discarded:
-            self.discarded = sorted(
+            self._discarded = sorted(
                 self.discarded,
                 key=lambda k: k.get('audio', k.get('video', {}))['bandwidth'],
                 reverse=True
