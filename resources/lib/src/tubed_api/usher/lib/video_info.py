@@ -26,10 +26,13 @@ import xbmcvfs  # pylint: disable=import-error
 from ...exceptions import CipherFailedDecipher
 from ...exceptions import CipherNotFound
 from ...exceptions import ContentRestricted
+from ...utils.logger import Log
 from .cipher import Cipher
 from .mpeg_dash import ManifestGenerator
 from .quality import Quality
 from .subtitles import Subtitles
+
+LOG = Log()
 
 
 class VideoInfo:
@@ -52,6 +55,8 @@ class VideoInfo:
         self._language = language
         self._region = region
         self._itags = {}
+
+        self.addon = xbmcaddon.Addon('script.module.tubed.api')
 
     @property
     def language(self):
@@ -77,6 +82,8 @@ class VideoInfo:
             self._itags = json.load(itag_file)
 
     def get_watch_page(self, video_id):
+        LOG.debug('Retrieving watch page /watch?v=%s' % video_id)
+
         parameters = {
             'v': video_id,
             'hl': self.language,
@@ -98,6 +105,8 @@ class VideoInfo:
         }
 
     def get_embed_page(self, video_id):
+        LOG.debug('Retrieving embed page /embed/%s' % video_id)
+
         parameters = {
             'hl': self.language,
             'gl': self.region
@@ -236,6 +245,7 @@ class VideoInfo:
         except:  # pylint: disable=bare-except
             pass
 
+        LOG.error('Video is unplayable: %s' % reason)
         return {
             'playable': False,
             'reason': reason
@@ -262,6 +272,7 @@ class VideoInfo:
                 url = 'https://www.youtube.com/%s' % \
                       url.lstrip('/').replace('www.youtube.com/', '')
 
+            LOG.debug('Found javascript player @ %s' % url)
             return url
 
         if javascript_url:
@@ -311,6 +322,8 @@ class VideoInfo:
         return ''
 
     def get_video(self, video_id, quality=None):  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+        LOG.debug('Retrieving video information for %s' % video_id)
+
         headers = self.headers.copy()
         if self._access_token:
             headers['Authorization'] = 'Bearer %s' % self._access_token
@@ -454,9 +467,8 @@ class VideoInfo:
             if license_info.get('drmFamily') == 'WIDEVINE':
                 license_data['url'] = license_info.get('url', '')
                 if license_data['url']:
-                    license_data['proxy'] = 'http://127.0.0.1:%s/widevine||R{SSM}|' % \
-                                            xbmcaddon.Addon('script.module.tubed.api')\
-                                                .getSettingInt('httpd.port') or 52520
+                    license_data['proxy'] = 'http://127.0.0.1:%s/widevine||R{SSM}|' % self.addon \
+                        .getSettingInt('httpd.port') or 52520
                     license_data['token'] = self._access_token
                     break
 
@@ -531,4 +543,6 @@ class VideoInfo:
         video_stream['title'] = '%s@%s' % \
                                 (stream_info['audio']['codec'],
                                  str(stream_info['audio'].get('bitrate', 0)))
+
+        LOG.debug('Retrieved video information for %s: %s' % (video_id, video_stream))
         return video_stream

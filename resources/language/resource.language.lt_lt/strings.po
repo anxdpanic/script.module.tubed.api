@@ -29,3 +29,19 @@ msgstr ""
 msgctxt "#30003"
 msgid "Configure the HTTP server port that MPEG-DASH manifests are hosted from"
 msgstr ""
+
+msgctxt "#30004"
+msgid "Debug"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Component Logging"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Manifest generator"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Enable logging of more detailed information from the manifest generator"
+msgstr ""

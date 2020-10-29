@@ -10,14 +10,35 @@
 
 from copy import deepcopy
 
+from ..utils.logger import Log
 from ..exceptions import ResourceUnavailable
 from .request_handler import v3_request
+
+LOG = Log()
 
 
 class Query:
     _base_url = ''
 
     def __init__(self, method, path, parameters=None, data=None, headers=None):
+        log_headers = deepcopy(headers)
+        log_parameters = deepcopy(parameters)
+
+        if 'Authorization' in log_headers:  # hide user's access token
+            log_headers['Authorization'] = '*' * 16
+
+        if 'key' in log_parameters:  # hide api key
+            if len(log_parameters['key']) >= 20:
+                log_parameters['key'] = '****%s%s%s****' % \
+                                        (log_parameters['key'][4:8],
+                                         '*' * (len(log_parameters['key']) - 16),
+                                         log_parameters['key'][-8:-4])
+            else:
+                log_parameters['key'] = '*' * 16
+
+        LOG.debug('Initializing query: %s | %s | %s | %s | %s |' %
+                  (method.upper(), path, log_parameters, data, log_headers))
+
         if parameters is None:
             parameters = {}
 
@@ -116,6 +137,7 @@ class V3Query(Query):
 
 def query(obj):
     def wrapper(*args, **kwargs):
+        LOG.debug('Initiating query: %s | %s |' % (args, kwargs))
         qry = obj(*args, **kwargs)
         return qry.invoke()
 
