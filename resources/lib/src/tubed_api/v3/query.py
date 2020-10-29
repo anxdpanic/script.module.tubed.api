@@ -10,8 +10,8 @@
 
 from copy import deepcopy
 
-from ..utils.logger import Log
 from ..exceptions import ResourceUnavailable
+from ..utils.logger import Log
 from .request_handler import v3_request
 
 LOG = Log()
