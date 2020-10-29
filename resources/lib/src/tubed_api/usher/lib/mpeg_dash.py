@@ -19,8 +19,8 @@ import xbmcaddon  # pylint: disable=import-error
 import xbmcgui  # pylint: disable=import-error
 import xbmcvfs  # pylint: disable=import-error
 
-from .quality import Quality
 from ...utils.logger import Log
+from .quality import Quality
 
 LOG = Log()
 
