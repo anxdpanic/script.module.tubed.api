@@ -511,7 +511,7 @@ class ManifestGenerator:
         if self.discarded:
             self._discarded = sorted(
                 self.discarded,
-                key=lambda k: k.get('audio', k.get('video', {}))['bandwidth'],
+                key=lambda k: (k.get('reason'), k.get('audio', k.get('video', {}))['bandwidth']),
                 reverse=True
             )
 
