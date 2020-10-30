@@ -32,7 +32,7 @@ from .mpeg_dash import ManifestGenerator
 from .quality import Quality
 from .subtitles import Subtitles
 
-LOG = Log()
+LOG = Log('usher', __file__)
 
 
 class VideoInfo:

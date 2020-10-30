@@ -22,7 +22,7 @@ import xbmcvfs  # pylint: disable=import-error
 from ...utils.logger import Log
 from .quality import Quality
 
-LOG = Log()
+LOG = Log('usher', __file__)
 
 
 class ManifestGenerator:
