@@ -14,7 +14,7 @@ from ..exceptions import ResourceUnavailable
 from ..utils.logger import Log
 from .request_handler import v3_request
 
-LOG = Log()
+LOG = Log('v3', __file__)
 
 
 class Query:
