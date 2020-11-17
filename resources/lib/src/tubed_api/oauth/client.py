@@ -12,6 +12,7 @@ import requests
 
 from ..exceptions import OAuthInvalidGrant
 from ..exceptions import OAuthRequestFailed
+from . import scopes
 
 
 class Client:
@@ -29,7 +30,7 @@ class Client:
             self.client_id = CLIENT_ID
             self.client_secret = CLIENT_SECRET
 
-    def request_codes(self):
+    def request_codes(self, scope=None):
         headers = {
             'Host': 'accounts.google.com',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
@@ -37,10 +38,17 @@ class Client:
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
+        if not scope:
+            scope = scopes.YOUTUBE
+
+        elif isinstance(scope, list):
+            scope = ' '.join(scope)
+
         data = {
             'client_id': self.client_id,
-            'scope': 'https://www.googleapis.com/auth/youtube'
+            'scope': scope
         }
+
         response, payload = self._post('https://accounts.google.com/o/oauth2/device/code',
                                        data=data, headers=headers)
 

@@ -10,4 +10,4 @@
 
 from .client import Client
 
-__all__ = ['client', 'Client']
+__all__ = ['client', 'Client', 'scopes']
