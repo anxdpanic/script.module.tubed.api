@@ -8,7 +8,6 @@
     See LICENSES/GPL-2.0-only.txt for more information.
 """
 
-import socket
 from http.server import HTTPServer
 from threading import Thread
 
@@ -93,9 +92,5 @@ class HTTPDaemon(xbmc.Monitor):
         return not xbmcvfs.exists(self.cache_path)
 
     def _server(self):
-        try:
-            server = HTTPServer((self.address, self.port), RequestHandler)
-            return server
-
-        except socket.error:
-            return None
+        server = HTTPServer((self.address, self.port), RequestHandler)
+        return server
