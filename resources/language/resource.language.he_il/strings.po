@@ -12,6 +12,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && n % 10 == 0) ? 2 : 3));\n"
 
+msgctxt "Addon Summary"
+msgid "A module to access YouTube's Data API"
+msgstr ""
+
+msgctxt "Addon Description"
+msgid "The Tubed API module provides a convenient way to access YouTube's Data API in Kodi 19+"
+msgstr ""
+
 msgctxt "#30000"
 msgid "MPEG-DASH HTTPD"
 msgstr ""
