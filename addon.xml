@@ -18,6 +18,8 @@
         <license>GPL-2.0-only</license>
         <source>https://github.com/anxdpanic/script.module.tubed.api</source>
         <summary lang="en_GB">A module to access YouTube's Data API</summary>
+        <summary lang="de_DE">Ein Modul, um Daten über die YouTube-Daten-API abzufragen</summary>
         <description lang="en_GB">The Tubed API module provides a convenient way to access YouTube's Data API in Kodi 19+</description>
+        <description lang="de_DE">Das Tubed-API-Modul stellt eine Schnittstelle zum Zugriff auf Daten über die YouTube-Data-API in Kodi 19+ zur Verfügung.</description>
     </extension>
 </addon>
