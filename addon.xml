@@ -8,7 +8,7 @@
     <extension point="xbmc.service" library="resources/lib/service.py"/>
     <extension point="xbmc.addon.metadata">
         <news>
-- refactor quality matching
+- fix playback of some videos
         </news>
         <assets>
             <icon>resources/media/icon.png</icon>
