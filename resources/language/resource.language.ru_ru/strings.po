@@ -26,7 +26,7 @@ msgstr "MPEG-DASH HTTPD"
 
 msgctxt "#30001"
 msgid "Configure the HTTP server that MPEG-DASH manifests are hosted from"
-msgstr "Настройка HTTP сервера, в котором размещаются MPEG-DASH манифесты"
+msgstr "Настройте HTTP сервер, в котором размещаются MPEG-DASH манифесты"
 
 msgctxt "#30002"
 msgid "Port"
@@ -34,7 +34,7 @@ msgstr "Порт"
 
 msgctxt "#30003"
 msgid "Configure the HTTP server port that MPEG-DASH manifests are hosted from"
-msgstr "Настройка порта HTTP сервера, в котором размещаются MPEG-DASH манифесты"
+msgstr "Настройте порт HTTP сервера, в котором размещаются MPEG-DASH манифесты"
 
 msgctxt "#30004"
 msgid "Debug"
