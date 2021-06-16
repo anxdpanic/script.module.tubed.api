@@ -8,7 +8,7 @@
     <extension point="xbmc.service" library="resources/lib/service.py"/>
     <extension point="xbmc.addon.metadata">
         <news>
-- fix playback of some videos
+- fix playback
         </news>
         <assets>
             <icon>resources/media/icon.png</icon>
