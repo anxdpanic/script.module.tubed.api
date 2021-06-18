@@ -2,7 +2,7 @@
 
 # Tubed API
 
-![Build Status](https://img.shields.io/travis/com/anxdpanic/script.module.tubed.api/master.svg)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fanxdpanic%2Fscript.module.tubed.api%2Fbadge&logo=none)](https://actions-badge.atrox.dev/anxdpanic/script.module.tubed.api/goto)
 ![License](https://img.shields.io/badge/license-GPL--2.0--only-success.svg)
 ![Kodi Version](https://img.shields.io/badge/kodi-matrix%7Ealpha2%2B-success.svg)
 ![Contributors](https://img.shields.io/github/contributors/anxdpanic/script.module.tubed.api.svg)
