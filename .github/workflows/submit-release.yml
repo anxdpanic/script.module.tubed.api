@@ -30,7 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get install libxml2-utils xmlstarlet zip
           python -m pip install --upgrade pip
           python -m pip install git+https://github.com/romanvm/kodi-addon-submitter.git
 
@@ -52,7 +51,7 @@ jobs:
       - name: Submit to Official Repository (Isengard)
         id: submit-matrix
         run: |
-          submit-addon -r repo-scripts -b matrix --push-branch ${{ github.event.repository.name }}
+          submit-addon -r repo-scripts -b matrix --pull-request ${{ github.event.repository.name }}
         working-directory: ${{ github.event.repository.name }}
         env:
           GH_USERNAME: anxdpanic
