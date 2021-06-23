@@ -48,7 +48,7 @@ jobs:
           git commit -m "Remove unwanted files"
         working-directory: ${{ github.event.repository.name }}
 
-      - name: Submit to Official Repository (Isengard)
+      - name: Submit to Official Repository (Matrix)
         id: submit-matrix
         run: |
           submit-addon -r repo-scripts -b matrix --pull-request ${{ github.event.repository.name }}
