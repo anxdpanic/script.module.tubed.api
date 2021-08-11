@@ -8,8 +8,9 @@
     <extension point="xbmc.service" library="resources/lib/service.py"/>
     <extension point="xbmc.addon.metadata">
         <news>
-- fixup playback
-- fixup age-gate detection
+- fixup playback of some videos
+- added cipher to calculate n for ratebypass
+- added weblate translations
         </news>
         <assets>
             <icon>resources/media/icon.png</icon>
