@@ -18,6 +18,9 @@ from ...utils.logger import Log
 LOG = Log('usher', __file__)
 
 
+# pylint: disable=invalid-name
+
+
 class CalculateN:
     def __init__(self, js):
         raw_code = get_throttling_function_code(js)
@@ -40,7 +43,7 @@ class CalculateN:
                   .format(initial_n=''.join(initial_n)))
 
         # First, update all instances of 'b' with the list(initial_n)
-        for i in range(len(self.throttling_array)):
+        for i in range(len(self.throttling_array)):  # pylint: disable=consider-using-enumerate
             if self.throttling_array[i] == 'b':
                 self.throttling_array[i] = initial_n
 
@@ -211,15 +214,15 @@ def get_throttling_function_array(raw_code):
 
         if el.startswith('function'):
             mapper = (
-                (r"{for\(\w=\(\w%\w\.length\+\w\.length\)%\w\.length;\w--;\)\w\.unshift\(\w.pop\(\)\)}", throttling_unshift),  # noqa:E501
+                (r"{for\(\w=\(\w%\w\.length\+\w\.length\)%\w\.length;\w--;\)\w\.unshift\(\w.pop\(\)\)}", throttling_unshift),  # pylint: disable=line-too-long,useless-suppression
                 (r"{\w\.reverse\(\)}", throttling_reverse),
                 (r"{\w\.push\(\w\)}", throttling_push),
                 (r";var\s\w=\w\[0\];\w\[0\]=\w\[\w\];\w\[\w\]=\w}", throttling_swap),
                 (r"case\s\d+", throttling_cipher_function),
-                (r"\w\.splice\(0,1,\w\.splice\(\w,1,\w\[0\]\)\[0\]\)", throttling_nested_splice),  # noqa:E501
+                (r"\w\.splice\(0,1,\w\.splice\(\w,1,\w\[0\]\)\[0\]\)", throttling_nested_splice),  # pylint: disable=line-too-long,useless-suppression
                 (r";\w\.splice\(\w,1\)}", js_splice),
-                (r"\w\.splice\(-\w\)\.reverse\(\)\.forEach\(function\(\w\){\w\.unshift\(\w\)}\)", throttling_prepend),  # noqa:E501
-                (r"for\(var \w=\w\.length;\w;\)\w\.push\(\w\.splice\(--\w,1\)\[0\]\)}", throttling_reverse),  # noqa:E501
+                (r"\w\.splice\(-\w\)\.reverse\(\)\.forEach\(function\(\w\){\w\.unshift\(\w\)}\)", throttling_prepend),  # pylint: disable=line-too-long,useless-suppression
+                (r"for\(var \w=\w\.length;\w;\)\w\.push\(\w\.splice\(--\w,1\)\[0\]\)}", throttling_reverse),  # pylint: disable=line-too-long,useless-suppression
             )
 
             found = False
@@ -233,7 +236,7 @@ def get_throttling_function_array(raw_code):
         converted_array.append(el)
 
     # Replace null elements with array itself
-    for i in range(len(converted_array)):
+    for i in range(len(converted_array)):  # pylint: disable=consider-using-enumerate
         if converted_array[i] is None:
             converted_array[i] = converted_array
 
@@ -279,7 +282,7 @@ def throttling_reverse(arr):
     indvidual element.
     """
     reverse_copy = copy(arr)[::-1]
-    for i in range(len(reverse_copy)):
+    for i in range(len(reverse_copy)):  # pylint: disable=consider-using-enumerate
         arr[i] = reverse_copy[i]
 
 
@@ -413,7 +416,7 @@ def throttling_swap(d, e):
     d[e] = f
 
 
-def js_splice(arr, start, delete_count=None, *items):
+def js_splice(arr, start, delete_count=None, *items):  # pylint: disable=keyword-arg-before-vararg
     """Implementation of javascript's splice function.
     :param list arr:
         Array to splice
@@ -423,7 +426,8 @@ def js_splice(arr, start, delete_count=None, *items):
         Number of elements to delete from the array
     :param *items:
         Items to add to the array
-    Reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice  # noqa:E501
+    Reference:
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     """
     # Special conditions for start value
     try:
