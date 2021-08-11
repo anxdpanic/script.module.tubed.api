@@ -131,9 +131,8 @@ class Cipher:
             return {}
 
         function_name = function_name.replace('$', '\\$')
-
-        pattern = r'\s?%s=function\((?P<parameter>[^)]+)\)\s?{\s?' \
-                  r'(?P<body>[^}]+)\s?}' % function_name
+        pattern = r'%s=function\((?P<parameter>\w)\){(?P<body>[a-z=\.\("\)]*;(.*);(?:.+))}' \
+                  % function_name
 
         match = re.search(pattern, self.javascript)
         if match:
