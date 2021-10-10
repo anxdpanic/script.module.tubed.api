@@ -9,7 +9,6 @@
     <extension point="xbmc.addon.metadata">
         <news>
 - fix ratebypass |contrib: RNavega|
-- fixup issue caused by bad linting
         </news>
         <assets>
             <icon>resources/media/icon.png</icon>
