@@ -27,6 +27,8 @@
         <summary lang="en_US">A module to access YouTube&apos;s Data API</summary>
         <summary lang="es_ES">Un módulo para accedee al API de Datos de YouTube</summary>
         <summary lang="fi_FI">Moduuli YouTube Data -rajapinnan käyttöön</summary>
+        <summary lang="hr_HR">Modul za pristup YouTubovom API-ju</summary>
+        <summary lang="it_IT">Un modulo per accedere ai dati API di YouTube</summary>
         <summary lang="ko_KR">YouTube의 데이터 API에 액세스하기 위한 모듈</summary>
         <summary lang="ru_RU">Модуль для доступа к YouTube Data API</summary>
         <summary lang="sk_SK">Modul na prístup k údajom API služby Youtube</summary>
@@ -39,6 +41,8 @@
         <description lang="en_GB">The Tubed API module provides a convenient way to access YouTube&apos;s Data API in Kodi 19+</description>
         <description lang="es_ES">El módulo API Tubed provee una manera conveniente de acceder al API de Datos de YouTube en Kodi 19+</description>
         <description lang="fi_FI">Tubed API-moduuli tarjoaa helpon tavan YouTube Data -rajapinnan käyttöön Kodi versioissa 19+</description>
+        <description lang="hr_HR">Tubed API modul omogućuje pouzdan način pristupa YouTubovom API-ju u Kodi 19+</description>
+        <description lang="it_IT">Il modulo Tubed API fornisce un modo conveniente per accedere all&apos;API dei dati di YouTube in Kodi 19+</description>
         <description lang="ko_KR">Tubed API 모듈은 Kodi 19+에서 YouTube의 Data API에 액세스하는 편리한 방법을 제공합니다</description>
         <description lang="ru_RU">API модуль Tubed предоставляет удобный доступ к YouTube Data API в Kodi 19+</description>
         <description lang="zh_CN">Tubed API 模块为 Kodi 19+ 提供了访问 YouTube 数据 API 的便捷方式</description>
