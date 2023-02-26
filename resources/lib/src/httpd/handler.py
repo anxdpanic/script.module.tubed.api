@@ -146,7 +146,9 @@ class RequestHandler(BaseHTTPRequestHandler):
                 'Authorization': 'Bearer %s' % token
             }
 
-            response = requests.post(url=url, headers=headers, data=data, stream=True)
+            response = requests.post(url=url, headers=headers,
+                                     data=data, stream=True,
+                                     timeout=60)
 
             content = response.raw.read(int(response.headers.get('content-length')))
 

@@ -79,7 +79,8 @@ class HTTPDaemon(xbmc.Monitor):
     def ping(self):
         try:
             response = requests.get('http://{address}:{port}/ping'
-                                    .format(address=self.address, port=self.port))
+                                    .format(address=self.address, port=self.port),
+                                    timeout=60)
             return response.status_code == 204
 
         finally:

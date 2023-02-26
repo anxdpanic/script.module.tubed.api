@@ -213,7 +213,8 @@ class VideoInfo:
             try:
                 response_payload = requests.post(video_info_url, params=params,
                                                  json=payload, headers=headers,
-                                                 cookies=None, allow_redirects=True)
+                                                 cookies=None, allow_redirects=True,
+                                                 timeout=60)
                 response_payload.raise_for_status()
                 player_response = response_payload.json()
                 if player_response.get('playabilityStatus', {}).get('status', 'OK') == \

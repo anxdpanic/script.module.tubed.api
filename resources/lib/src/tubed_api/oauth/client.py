@@ -204,7 +204,7 @@ class Client:
 
     @staticmethod
     def _post(url, data, headers):
-        response = requests.post(url, data=data, headers=headers)
+        response = requests.post(url, data=data, headers=headers, timeout=60)
 
         response.encoding = 'utf-8'
 
