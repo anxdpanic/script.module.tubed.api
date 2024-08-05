@@ -15,7 +15,7 @@ msgstr ""
 
 msgctxt "Addon Summary"
 msgid "A module to access YouTube's Data API"
-msgstr "A module to access YouTube's Data API"
+msgstr ""
 
 msgctxt "Addon Description"
 msgid "The Tubed API module provides a convenient way to access YouTube's Data API in Kodi 19+"
